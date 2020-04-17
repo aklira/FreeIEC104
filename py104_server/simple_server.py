@@ -42,5 +42,28 @@ def main():
     clockSyncHandler = iec104.clockSyncHandler_create()
     iec104.CS104_Slave_setClockSyncHandler(slave, clockSyncHandler, None)
 
+    # set the callback handler for the interrogation command
+    interrogationHandler = iec104.interrogationHandler_create()
+    iec104.CS104_Slave_setInterrogationHandler(slave, interrogationHandler, None)
+
+    # set handler for other message types
+    asduHandler = iec104.asduHandler_create()
+    iec104.CS104_Slave_setASDUHandler(slave, asduHandler, None)
+
+    # set handler to handle connection requests (optional)
+    connectionRequestHandler = iec104.connectionRequestHandler_create()
+    iec104.CS104_Slave_setConnectionRequestHandler(slave, connectionRequestHandler, None)
+
+    # set handler to track connection events (optional)
+    connectionEventHandler = iec104.connectionEventHandler_create()
+    iec104.CS104_Slave_setConnectionEventHandler(slave, connectionEventHandler, None)   
+
+    iec104.CS104_Slave_start(slave)
+
+    if (iec104.CS104_Slave_isRunning(slave) == False):
+        print("Starting server failed!\n")
+    else:
+        print("Server started successfully!\n")
+
 if __name__ == '__main__':
     main()
