@@ -78,7 +78,7 @@ def main():
 
         iec104.CS101_ASDU_addInformationObject(newAsdu, io)
 
-        iec104.InformationObject_delete(io)
+        iec104.InformationObject_destroy(io)
 
         iec104.CS104_Slave_enqueueASDU(slave, newAsdu)
 
