@@ -7,16 +7,18 @@ __version__ = "0.1"
 Free and open implementation of the IEC 60870-5 104 protocol
 '''
 
-import signal
+import signal, time
 import iec104
 
-running = True 
+running = True
+scaledValue = 0
 
-def sigint_handler():
+def sigint_handler(signalNumber, frame):
     global running
     running = False
 
 def main():
+    global scaledValue
 
     signal.signal(signal.SIGINT, sigint_handler)
 
@@ -64,6 +66,27 @@ def main():
         print("Starting server failed!\n")
     else:
         print("Server started successfully!\n")
+    
+    while(running):
+        time.sleep(1000)
+
+        newAsdu = iec104.CS101_ASDU_create(alParams, False, iec104.CS101_COT_PERIODIC, 0, 1, False, False)
+
+        io = iec104.InformationObject_create(110, scaledValue)
+
+        scaledValue += 1
+
+        iec104.CS101_ASDU_addInformationObject(newAsdu, io)
+
+        iec104.InformationObject_destroy(io)
+
+        iec104.CS104_Slave_enqueueASDU(slave, newAsdu)
+
+        iec104.CS101_ASDU_destroy(newAsdu)
+    
+    iec104.CS104_Slave_stop(slave)
+    iec104.CS104_Slave_destroy(slave)
+    quit()
 
 if __name__ == '__main__':
     main()
