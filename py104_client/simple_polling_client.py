@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+# coding: utf-8
+# info
+__version__ = "0.1"
+
+'''
+Free and open implementation of the IEC 60870-5 104 protocol
+'''
+
+import time
+import iec104
+
+def main():
+    ip = "localhost"
+    port = iec104.IEC_60870_5_104_DEFAULT_PORT
+
+    print("Connecting to: %s on port: %s" %  (ip, port))
+
+    con = iec104.CS104_Connection_create(ip, port)
+
+    connectionHandler = iec104.connectionHandler_create()
+    iec104.CS104_Connection_setConnectionHandler(con, connectionHandler, None)
+
+    asduReceivedHandler = iec104.asduReceivedHandler_create()
+    iec104.CS104_Connection_setASDUReceivedHandler(con, asduReceivedHandler, None)
+
+    if (iec104.CS104_Connection_connect(con)):
+        print("Connection established!\n")
+
+        iec104.CS104_Connection_sendStartDT(con)
+
+        time.sleep(2)
+
+        iec104.CS104_Connection_sendInterrogationCommand(con, iec104.CS101_COT_ACTIVATION, 1, iec104.IEC60870_QOI_STATION)
+
+        time.sleep(5)
+
+        print("End of GI ...\n")
+
+        iec104.CS104_Connection_sendReadCommand(con, 1, 0)
+
+        print("Wait ...\n")
+        time.sleep(1)
+    else:
+        print("Connection failed!\n")
+    
+        time.sleep(1)
+
+        iec104.CS104_Connection_destroy(con)
+
+        print("exit\n")
+        quit()
+
+if __name__ == '__main__':
+    main()
