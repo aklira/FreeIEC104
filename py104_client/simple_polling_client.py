@@ -37,7 +37,7 @@ def main():
 
         print("End of GI ...\n")
 
-        iec104.CS104_Connection_sendReadCommand(con, 1, 0)
+        iec104.CS104_Connection_sendReadCommand(con, 1, 110)
 
         print("Wait ...\n")
         time.sleep(1)
