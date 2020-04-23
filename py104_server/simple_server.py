@@ -68,7 +68,7 @@ def main():
         print("Server started successfully!\n")
     
     while(running):
-        time.sleep(1)
+        time.sleep(10)
 
         newAsdu = iec104.CS101_ASDU_create(alParams, False, iec104.CS101_COT_PERIODIC, 0, 1, False, False)
 
