@@ -8,6 +8,7 @@ Free and open implementation of the IEC 60870-5 104 protocol
 '''
 
 import signal, time
+import random
 import iec104
 
 running = True
@@ -74,7 +75,7 @@ def main():
 
         io = iec104.InformationObject_create(110, scaledValue)
 
-        scaledValue += 1
+        scaledValue = random.randint(1, 32767)
 
         iec104.CS101_ASDU_addInformationObject(newAsdu, io)
 
